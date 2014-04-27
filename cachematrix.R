@@ -46,10 +46,13 @@
 makeCacheMatrix <- function(x = matrix()) {
     # if the 'x' matrix argument is provided then 'x' is bound to the matrix to inverse
     # otherwise 'x' is bound to a default 1x1 matrix containing NA
+    # Note: usage of the '<<-' operator in the set functions ensures that 'x' is updated,
+    # i.e. R lexical scoping rules are used so that 'x' and 'cachedinverse' are part of
+    # the context shared by all set & get functions in the list returned
 
     # cached inverse matrix is null by default
     cachedinverse <- NULL
-    # set the matrix to inverse
+    # function to set the matrix to inverse
     set <- function(y) {
         # set the 'x' matrix in the parent environment
         # (note that 'x <- y' would not affect the 'x' matrix above)
@@ -57,13 +60,16 @@ makeCacheMatrix <- function(x = matrix()) {
         # cached inverse matrix is reset to null if the 'x' matrix is changed
         cachedinverse <<- NULL
     }
-    # return 'x' matrix, either set by makeCacheMatrix(x) or makeCacheMatrix$set(y)
+    # function to return 'x' matrix (set by makeCacheMatrix(x) or makeCacheMatrix$set(y))
     get <- function() x
+    # save the inverse in the cache
     setinverse <- function(inverse) cachedinverse <<- inverse
+    # get the inverse from the cache
     getinverse <- function() cachedinverse
+    # return the list of functions
     list(set = set, get = get,
          setinverse = setinverse,
-         getinverse = getinverse)    
+         getinverse = getinverse)
 }
 
 ## cacheSolve(x, ...) function takes as mandatary argument a list 
