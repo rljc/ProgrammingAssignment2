@@ -12,6 +12,10 @@
 ## Usage, assuming 'm' is an invertible matrix:
 ##    cm <- makeCacheMatrix(m)
 ##    inv <- cacheSolve(cm)
+## OR
+##    cm <- makeCacheMatrix()
+##    cm$set(m)
+##    inv <- cacheSolve(cm)
 ## Note that cm variable needs to be used in order to leverage caching, otherwise 
 ## a new cm object would be contructed every time; 
 ## this usage does not cache anything: cacheSolve(makeCacheMatrix(m))
@@ -33,19 +37,27 @@
 
 ## makeCacheMatrix(x = matrix()) function takes an optional matrix argument, and
 ## returns a list containing functions to
-## 1. set the value of the matrix passed as argument
+## 1. set the value of the matrix
 ## 2. get the value of this matrix
 ## 3. set the value of the inverse of this matrix
 ## 4. get the value of the inverse of this matrix
 ## * the inverse of the matrix is set to NULL initially, and every time 'x' is set
 
 makeCacheMatrix <- function(x = matrix()) {
+    # if the 'x' matrix argument is provided then 'x' is bound to the matrix to inverse
+    # otherwise 'x' is bound to a default 1x1 matrix containing NA
 
+    # cached inverse matrix is null by default
     cachedinverse <- NULL
+    # set the matrix to inverse
     set <- function(y) {
-        x <<- y
+        # set the 'x' matrix in the parent environment
+        # (note that 'x <- y' would not affect the 'x' matrix above)
+        x <<- y 
+        # cached inverse matrix is reset to null if the 'x' matrix is changed
         cachedinverse <<- NULL
     }
+    # return 'x' matrix, either set by makeCacheMatrix(x) or makeCacheMatrix$set(y)
     get <- function() x
     setinverse <- function(inverse) cachedinverse <<- inverse
     getinverse <- function() cachedinverse
@@ -62,7 +74,7 @@ makeCacheMatrix <- function(x = matrix()) {
 ## * otherwise it calculates the inverse (using solve), saves it and returns it
 ## * additional arguments are passed to the solve function for matrix inversion
 ## * if the special "matrix" has changed its inverse is reset to NULL (see makeCacheMatrix)
-
+    
 
 cacheSolve <- function(x, ...) {
     ## if cached inverse matrix is not null then display a message and return the inverse
