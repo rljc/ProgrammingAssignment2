@@ -17,7 +17,7 @@
 ## this usage does not cache anything: cacheSolve(makeCacheMatrix(m))
 ## 
 ## Example:
-##    mat <- matrix(rnorm(2048*2048), 2048) # most probably an invertible 256x256 matrix
+##    mat <- matrix(rnorm(2048*2048), 2048) # large matrix, most probably invertible
 ##    determinant(mat, logarithm = FALSE) # useful to verify the matrix is invertible
 ##    cm <- makeCacheMatrix(mat) # creation of the list
 ##    inv <- cacheSolve(cm) #  invocation of cacheSolve
@@ -61,7 +61,7 @@ makeCacheMatrix <- function(x = matrix()) {
 ## and displays a message to inform the user 
 ## * otherwise it calculates the inverse (using solve), saves it and returns it
 ## * additional arguments are passed to the solve function for matrix inversion
-## * if the special "matrix" has changed its invers is reset to NULL (see makeCacheMatrix)
+## * if the special "matrix" has changed its inverse is reset to NULL (see makeCacheMatrix)
 
 
 cacheSolve <- function(x, ...) {
