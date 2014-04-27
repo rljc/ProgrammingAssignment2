@@ -89,7 +89,7 @@ cacheSolve <- function(x, ...) {
         message("getting cached data")
         return(cachedinverse)
     }
-    ## otherwise get matrix argument
+    ## otherwise get matrix from the list (a.k.a. special "matrix")
     data <- x$get()
     ## calculate the inverse of this matrix
     cachedinverse <- solve(data, ...)
